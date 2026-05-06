@@ -483,4 +483,3 @@ function inicializarUI() {
 
 // Ejecutar al cargar
 inicializarUI();
-
