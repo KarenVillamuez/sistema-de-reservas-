@@ -248,7 +248,7 @@ function confirmarReserva() {
     document.getElementById("inputCliente").value = "";
 
     // Mostrar mensaje de éxito
-    irAPaso("exito");
+    irAPaso("exito al agendar");
 }
 
 /** Reinicia el flujo de reserva para agendar otra cita */
