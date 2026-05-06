@@ -1,25 +1,32 @@
-# 📖 BookyFlow — Explicacion tecnica del proyecto
+# 📖 BookyFlow — Explicacion tecnica del proyecto (Segundo Avance)
 
 ## 📌 Descripcion general
 
-BookyFlow es una **aplicacion web de reservas** para negocios de servicios (barberias, salones de belleza, consultorios, etc.). Este primer avance es un **prototipo funcional con datos de ejemplo** (mock data) que demuestra dos flujos principales:
+BookyFlow es una **aplicacion web de reservas** para negocios de servicios (barberias, salones de belleza, consultorios, etc.). En este segundo avance se agregaron mejoras funcionales importantes:
 
-1. **Vista del cliente** — Un proceso paso a paso para agendar una cita.
-2. **Panel del dueño (dashboard)** — Una tabla con todas las citas agendadas y un resumen de ingresos semanales.
-
-Todo funciona en el navegador sin necesidad de servidor, base de datos ni instalaciones.
+- **Persistencia de datos** con `localStorage` (las citas sobreviven recargas de pagina).
+- **Control de disponibilidad real** (los horarios ya ocupados se bloquean).
+- **Imagenes de profesionales** en las tarjetas de seleccion.
+- **Precios en pesos colombianos** con formato de miles (ej. `$25.000`).
+- **Bootstrap Icons** en lugar de emojis para una apariencia mas profesional.
 
 ---
 
 ## 📂 Estructura de archivos
 
-El proyecto se compone de **3 archivos**:
-
-| Archivo | Descripcion |
-|---------|-------------|
-| `index.html` | Estructura y contenido de la pagina (HTML + Bootstrap) |
-| `styles.css` | Estilos CSS adicionales (ajustes minimos) |
-| `app.js` | Logica de la aplicacion en JavaScript vanilla |
+```
+TareaPaginaWeb/
+├── index.html       ← Estructura y contenido de la pagina
+├── styles.css       ← Estilos CSS adicionales
+├── app.js           ← Logica de la aplicacion
+├── explicacion.md   ← Este archivo de documentacion
+├── contexto.md      ← Contexto del proyecto
+└── img/             ← Carpeta con imagenes de profesionales
+    ├── Ana.jpg
+    ├── Carlos.jpg
+    ├── Laura.jpg
+    └── Pedro.jpg
+```
 
 ---
 
@@ -31,16 +38,40 @@ El proyecto se compone de **3 archivos**:
 | **CSS3** | Estilos visuales personalizados | - |
 | **JavaScript** | Logica, datos mock, manipulacion del DOM | ES5 (vanilla) |
 | **Bootstrap 5** | Framework CSS para componentes y diseño responsivo | 5.3.3 (CDN) |
+| **Bootstrap Icons** | Libreria de iconos vectoriales | 1.11.3 (CDN) |
 
-Bootstrap se carga desde un **CDN** (Content Delivery Network), lo que significa que no se instala nada localmente; el navegador descarga los archivos directamente de internet:
+### CDNs utilizados en el `<head>`
 
 ```html
 <!-- CSS de Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- JS de Bootstrap -->
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+```
+
+```html
+<!-- JS de Bootstrap (al final del body) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 ```
+
+### ¿Como se usa Bootstrap Icons?
+
+Se insertan con la etiqueta `<i>` y una clase que empieza con `bi bi-`:
+
+```html
+<i class="bi bi-calendar3"></i>      <!-- Icono de calendario -->
+<i class="bi bi-person"></i>          <!-- Icono de persona -->
+<i class="bi bi-clock"></i>           <!-- Icono de reloj -->
+<i class="bi bi-check-lg"></i>        <!-- Icono de palomita -->
+<i class="bi bi-arrow-left"></i>      <!-- Flecha izquierda -->
+<i class="bi bi-scissors"></i>        <!-- Tijeras -->
+<i class="bi bi-cash"></i>            <!-- Dinero -->
+<i class="bi bi-trash3"></i>          <!-- Bote de basura -->
+<i class="bi bi-exclamation-triangle"></i>  <!-- Advertencia -->
+```
+
+La ventaja sobre los emojis es que los iconos son **vectoriales** (no se pixelean), tienen **tamaño consistente** y un **estilo uniforme**.
 
 ---
 
@@ -49,13 +80,14 @@ Bootstrap se carga desde un **CDN** (Content Delivery Network), lo que significa
 ### Estructura general del documento
 
 ```
-<!DOCTYPE html>        ← Declara que es un documento HTML5
-<html lang="es">       ← Idioma español
-  <head>               ← Metadatos (no visibles en pantalla)
-  <body>               ← Contenido visible
+<!DOCTYPE html>
+<html lang="es">
+  <head>               ← Metadatos + CDNs de Bootstrap y Bootstrap Icons
+  <body>
     <header>           ← Encabezado con logo y navegacion
     <main>             ← Contenido principal
-      <section>        ← Secciones tematicas
+      <section>        ← Vista del cliente (4 pasos + exito)
+      <section>        ← Vista del dueño (dashboard)
     <footer>           ← Pie de pagina
   </body>
 </html>
@@ -63,51 +95,24 @@ Bootstrap se carga desde un **CDN** (Content Delivery Network), lo que significa
 
 ### Etiquetas semanticas utilizadas
 
-Las etiquetas semanticas dan **significado** al contenido. No cambian el aspecto visual, pero ayudan a los navegadores, lectores de pantalla y motores de busqueda a entender la estructura de la pagina.
-
 | Etiqueta | Para que sirve | Donde se usa en BookyFlow |
 |----------|---------------|--------------------------|
-| `<header>` | Encabezado de la pagina o seccion | Barra superior azul con el nombre "BookyFlow" y los botones de navegacion |
-| `<nav>` | Navegacion (enlaces o botones para moverse) | Dentro del `<header>`, contiene los botones "Cliente" y "Panel de dueño" |
-| `<main>` | Contenido principal de la pagina | Envuelve toda la zona central (vista cliente + dashboard) |
-| `<section>` | Seccion tematica del contenido | Cada paso del flujo de reserva (paso1 a paso4), la vista del cliente y el dashboard |
-| `<footer>` | Pie de pagina | Barra oscura inferior con el copyright |
+| `<header>` | Encabezado de la pagina | Barra superior azul con "BookyFlow" y botones de navegacion |
+| `<nav>` | Navegacion | Contiene los botones "Cliente" y "Panel de dueño" |
+| `<main>` | Contenido principal | Envuelve la vista del cliente y el dashboard |
+| `<section>` | Seccion tematica | Cada paso del flujo de reserva y el dashboard |
+| `<footer>` | Pie de pagina | Barra oscura inferior con copyright |
 
-**Ejemplo en el codigo:**
-
-```html
-<header class="bg-primary text-white py-3">
-    <div class="container d-flex justify-content-between align-items-center">
-        <h1 class="h4 mb-0">📅 BookyFlow</h1>
-        <nav>
-            <button id="btnVistaCliente" ...>👤 Cliente</button>
-            <button id="btnVistaDueno" ...>💼 Panel de dueño</button>
-        </nav>
-    </div>
-</header>
-```
-
-### 📋 La tabla del dashboard
-
-La tabla de citas en el panel del dueño usa una estructura semantica completa con tres partes:
-
-| Parte | Etiqueta | Que contiene |
-|-------|----------|-------------|
-| Cabecera | `<thead>` | Los titulos de las columnas (#, Cliente, Servicio, etc.) |
-| Cuerpo | `<tbody>` | Las filas con los datos de cada cita (se llenan con JS) |
-| Pie | `<tfoot>` | El total de citas registradas |
+### La tabla del dashboard
 
 ```html
-<table class="table table-striped table-hover table-bordered">
+<table class="table table-striped table-hover table-bordered align-middle">
     <thead class="table-dark">
         <tr>
-            <th>#</th>
-            <th>Cliente</th>
-            <th>Servicio</th>
-            <th>Profesional</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Precio</th>
+            <th><i class="bi bi-hash"></i></th>
+            <th><i class="bi bi-person"></i> Cliente</th>
+            <th><i class="bi bi-scissors"></i> Servicio</th>
+            <!-- ... mas columnas ... -->
         </tr>
     </thead>
     <tbody id="tablaCitasBody">
@@ -123,84 +128,55 @@ La tabla de citas en el panel del dueño usa una estructura semantica completa c
 </table>
 ```
 
-**Clases de Bootstrap usadas en la tabla:**
+**Clases de Bootstrap en la tabla:**
 
 | Clase | Que hace |
 |-------|---------|
-| `table` | Aplica el estilo base de tabla de Bootstrap |
-| `table-striped` | Alterna colores en las filas (zebra) para mejor legibilidad |
-| `table-hover` | Resalta la fila al pasar el mouse encima |
-| `table-bordered` | Agrega bordes a todas las celdas |
-| `table-dark` | Fondo oscuro (usado en el `<thead>`) |
-| `table-secondary` | Fondo gris claro (usado en el `<tfoot>`) |
-| `table-responsive` | Envuelve la tabla en un `<div>` que agrega scroll horizontal en pantallas chicas |
+| `table` | Estilo base de tabla de Bootstrap |
+| `table-striped` | Alterna colores en las filas (efecto zebra) |
+| `table-hover` | Resalta la fila al pasar el mouse |
+| `table-bordered` | Bordes en todas las celdas |
+| `table-dark` | Fondo oscuro (en el `<thead>`) |
+| `table-secondary` | Fondo gris claro (en el `<tfoot>`) |
+| `align-middle` | Alinea verticalmente el contenido al centro |
+| `table-responsive` | Agrega scroll horizontal en pantallas chicas (en el `<div>` contenedor) |
 
-### Atributo `colspan`
+### Imagenes de profesionales
+
+Las imagenes se insertan con la etiqueta `<img>` dentro de las cards:
 
 ```html
-<td colspan="7">Sin citas registradas</td>
+<img src="img/Ana.jpg"
+     alt="Foto de Ana Garcia"
+     class="img-profesional mb-2"
+     onerror="this.onerror=null; this.src='...';">
 ```
 
-`colspan="7"` hace que **una sola celda ocupe el ancho de 7 columnas**, fusionandolas en una. Se usa en el `<tfoot>` para que el mensaje de total aparezca centrado abajo de toda la tabla.
+| Atributo | Que hace |
+|----------|---------|
+| `src` | Ruta de la imagen (carpeta `img/` + nombre del profesional) |
+| `alt` | Texto alternativo que describe la imagen (accesibilidad y SEO) |
+| `class` | Aplica estilos CSS (forma circular, borde, tamaño) |
+| `onerror` | Si la imagen no se encuentra, muestra un placeholder SVG con la inicial del nombre |
 
-### 🔤 Entity codes (codigos de entidad)
+### Card de ingresos destacada
 
-En HTML, algunos caracteres especiales se escriben con codigos de entidad para que el navegador los interprete correctamente:
+```html
+<div class="card card-ingresos mt-3">
+    <div class="card-body">
+        <h5 class="card-title">
+            <i class="bi bi-wallet2"></i> Ingresos estimados de la semana
+        </h5>
+        <p class="display-6 text-success fw-bold" id="ingresosSemana">$0</p>
+    </div>
+</div>
+```
 
-| Codigo | Resultado | Descripcion |
-|--------|-----------|-------------|
-| `&ndash;` | – | Guion medio (en-dash) |
-| `&copy;` | © | Simbolo de copyright |
-| `&bull;` | • | Viñeta (bullet) |
-| `&larr;` | ← | Flecha izquierda |
-| `&ntilde;` | ñ | Letra eñe |
-| `&aacute;` | a | Letra a con acento |
-| `&#128197;` | 📅 | Emoji de calendario (codigo numerico) |
-| `&#10004;` | ✔ | Marca de verificacion |
-
-Los que empiezan con `&#` seguido de un **numero** son codigos numericos Unicode. Los que empiezan con `&` seguido de un **nombre** son entidades con nombre.
-
-### 🎨 Clases de Bootstrap mas usadas
-
-| Clase | Que hace |
-|-------|---------|
-| `container` | Centra el contenido y le pone un ancho maximo responsivo |
-| `row` | Crea una fila del sistema de grilla (grid) |
-| `col-md-4` | Columna que ocupa 4/12 del ancho en pantallas medianas o mas grandes |
-| `col-sm-6` | Columna que ocupa 6/12 del ancho en pantallas pequeñas o mas grandes |
-| `d-flex` | Activa Flexbox en el elemento |
-| `justify-content-between` | Distribuye los hijos con espacio entre ellos |
-| `align-items-center` | Alinea verticalmente al centro |
-| `d-none` | Oculta el elemento (`display: none`) |
-| `btn` | Estilo base de boton |
-| `btn-primary` | Boton azul |
-| `btn-success` | Boton verde |
-| `btn-secondary` | Boton gris |
-| `btn-outline-primary` | Boton con borde azul y fondo transparente |
-| `card` | Componente tarjeta de Bootstrap |
-| `card-body` | Contenido interior de una tarjeta |
-| `card-title` | Titulo de una tarjeta |
-| `alert alert-success` | Cuadro de alerta verde |
-| `mb-3` | Margen inferior (margin-bottom) de tamaño 3 |
-| `mt-3` | Margen superior (margin-top) de tamaño 3 |
-| `my-4` | Margen vertical (arriba y abajo) de tamaño 4 |
-| `py-3` | Padding vertical de tamaño 3 |
-| `me-2` | Margen derecho (margin-end) de tamaño 2 |
-| `ms-2` | Margen izquierdo (margin-start) de tamaño 2 |
-| `text-center` | Centra el texto |
-| `text-end` | Alinea el texto a la derecha |
-| `text-muted` | Texto en color gris claro |
-| `fw-bold` | Texto en negritas (font-weight bold) |
-| `h-100` | Altura al 100% del contenedor padre |
-| `g-3` | Gap (espacio) de tamaño 3 entre columnas de la grilla |
-
-El sistema de grilla de Bootstrap divide cada fila en **12 columnas**. `col-md-4` significa "ocupa 4 de 12 columnas" = un tercio del ancho.
+La clase `card-ingresos` esta definida en `styles.css` y le da un fondo verde suave con un borde lateral verde para que resalte visualmente.
 
 ---
 
 ## 🎨 Explicacion de `styles.css`
-
-Este archivo es **muy corto** porque Bootstrap ya maneja la mayoria de los estilos. Solo se agregan 3 ajustes:
 
 ### 1. Footer pegado al fondo (sticky footer)
 
@@ -216,9 +192,7 @@ main {
 }
 ```
 
-**Que hace:** Usa Flexbox para que el `<body>` ocupe al menos toda la pantalla (`100vh` = 100% del alto de la ventana). El `<main>` se expande (`flex: 1`) para llenar el espacio disponible, empujando el `<footer>` hasta abajo.
-
-**Sin esto:** Si el contenido es poco, el footer quedaria flotando a media pantalla.
+Usa Flexbox para que el `<body>` ocupe toda la pantalla. El `<main>` se expande para llenar el espacio, empujando el `<footer>` hasta abajo.
 
 ### 2. Cards clicables con efecto hover
 
@@ -236,314 +210,286 @@ main {
 
 | Propiedad | Que hace |
 |-----------|---------|
-| `cursor: pointer` | Cambia el cursor a "manita" para indicar que se puede hacer clic |
-| `transition` | Hace que los cambios de estilo sean suaves (animados en 0.15 segundos) |
-| `transform: translateY(-3px)` | Mueve la card 3 pixeles hacia arriba al pasar el mouse |
-| `box-shadow` | Agrega una sombra difusa debajo de la card al hacer hover |
+| `cursor: pointer` | Cambia el cursor a "manita" al pasar encima |
+| `transition` | Anima los cambios suavemente en 0.15 segundos |
+| `transform: translateY(-3px)` | Mueve la card 3px hacia arriba al hacer hover |
+| `box-shadow` | Agrega una sombra difusa |
 
-### 3. Ancho minimo para botones de horario
+### 3. Imagen circular de profesionales
 
 ```css
-.btn-horario {
-    min-width: 100px;
+.img-profesional {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #dee2e6;
 }
 ```
 
-Esto asegura que todos los botones de horario tengan al menos 100px de ancho para que se vean uniformes.
+| Propiedad | Que hace |
+|-----------|---------|
+| `width/height: 100px` | Tamaño fijo de 100x100 pixeles |
+| `object-fit: cover` | Recorta la imagen para que llene el cuadro sin deformarse |
+| `border-radius: 50%` | Convierte el cuadro en un circulo perfecto |
+| `border` | Borde gris claro alrededor del circulo |
+
+### 4. Card de ingresos destacada
+
+```css
+.card-ingresos {
+    background-color: #f0fdf4;
+    border-left: 4px solid #198754;
+}
+```
+
+Le da un fondo verde muy suave y una linea verde gruesa en el borde izquierdo, haciendo que resalte del resto del dashboard.
 
 ---
 
 ## ⚙️ Explicacion de `app.js`
 
-Este archivo contiene **toda la logica** de la aplicacion. Esta organizado en 10 secciones numeradas.
+### 📦 Seccion 1: Datos mock
 
-### 📦 Seccion 1: Datos mock (arrays de ejemplo)
-
-Los datos estan almacenados en **arrays de objetos** declarados con `var`:
+Los datos se declaran como arrays de objetos. Los precios estan en **pesos colombianos**:
 
 ```javascript
 var servicios = [
-    { nombre: "Corte de cabello", duracion: "30 min", precio: 150 },
-    { nombre: "Manicura",         duracion: "45 min", precio: 200 },
+    { nombre: "Corte de cabello", duracion: "30 min", precio: 25000 },
+    { nombre: "Manicura",         duracion: "45 min", precio: 35000 },
     // ...
 ];
 ```
 
-| Array | Tipo de dato | Propiedades de cada objeto |
-|-------|-------------|---------------------------|
-| `servicios` | Array de objetos | `nombre` (string), `duracion` (string), `precio` (number) |
-| `profesionales` | Array de objetos | `nombre` (string), `especialidad` (string) |
-| `horarios` | Array de strings | Cada elemento es una hora como `"09:00 AM"` |
-| `citas` | Array vacio `[]` | Se llena al confirmar una reserva con objetos que tienen: `cliente`, `servicio`, `profesional`, `fecha`, `hora`, `precio` |
-
-**¿Por que se usa `var`?** Porque es la forma basica de declarar variables en JavaScript. Tambien existen `let` y `const` (versiones mas modernas), pero `var` es el nivel introductorio.
-
-### 📦 Seccion 2: Variable de seleccion actual
+Los profesionales ahora incluyen una propiedad `imagen` con la ruta al archivo:
 
 ```javascript
-var seleccion = {
-    servicio:     null,
-    profesional:  null,
-    horario:      null
-};
-```
-
-Este **objeto** guarda los **indices** (posiciones en el array) de lo que el usuario ha seleccionado en cada paso. Se inicializa en `null` (nada seleccionado).
-
-### 🔀 Seccion 3: Navegacion entre vistas (Cliente / Dueño)
-
-```javascript
-function mostrarVistaCliente() {
-    document.getElementById("vistaCliente").classList.remove("d-none");
-    document.getElementById("vistaDueno").classList.add("d-none");
+var profesionales = [
+    { nombre: "Ana Garcia", especialidad: "Estilista", imagen: "img/Ana.jpg" },
     // ...
-}
+];
 ```
 
-**¿Como funciona el mostrar/ocultar?**
+### 💾 Seccion 2: Persistencia con localStorage
 
-Se usa la clase `d-none` de Bootstrap, que aplica `display: none` al elemento. Para **mostrar** algo, se le **quita** la clase `d-none`. Para **ocultar** algo, se le **agrega**.
+`localStorage` es un almacenamiento del navegador que permite guardar datos como texto (strings). Los datos **persisten** aunque se cierre el navegador o se recargue la pagina.
+
+```javascript
+function cargarCitas() {
+    var datos = localStorage.getItem("bookyCitas");  // Leer del storage
+    if (datos) {
+        return JSON.parse(datos);   // Convertir texto JSON a array/objeto
+    }
+    return [];   // Si no hay datos, devolver array vacio
+}
+
+function guardarCitas() {
+    localStorage.setItem("bookyCitas", JSON.stringify(citas));  // Guardar como texto JSON
+}
+```
 
 | Metodo | Que hace |
 |--------|---------|
-| `document.getElementById("id")` | Busca un elemento HTML por su atributo `id` |
-| `.classList.add("clase")` | Agrega una clase CSS al elemento |
-| `.classList.remove("clase")` | Quita una clase CSS del elemento |
+| `localStorage.getItem("clave")` | Lee un valor guardado (devuelve un string o `null`) |
+| `localStorage.setItem("clave", "valor")` | Guarda un valor (solo acepta strings) |
+| `JSON.stringify(objeto)` | Convierte un array/objeto de JavaScript a texto JSON |
+| `JSON.parse(texto)` | Convierte texto JSON de vuelta a un array/objeto |
 
-### 🔢 Seccion 4: Navegacion entre pasos (1 → 2 → 3 → 4 → exito)
+**¿Por que se necesitan `JSON.stringify` y `JSON.parse`?** Porque `localStorage` solo puede guardar **texto** (strings). Un array como `[{nombre: "Ana"}]` necesita convertirse primero a texto `'[{"nombre":"Ana"}]'` para guardarse, y luego reconvertirse al leerlo.
+
+Se manejan **dos claves** en localStorage:
+
+| Clave | Que guarda |
+|-------|-----------|
+| `bookyCitas` | Array de todas las citas confirmadas (para el dashboard) |
+| `bookyTurnos` | Array de turnos ocupados (para el control de disponibilidad) |
+
+### 💲 Seccion 3: Formateo de precios en pesos colombianos
 
 ```javascript
-function irAPaso(numero) {
-    var pasos = ["paso1", "paso2", "paso3", "paso4", "pasoExito"];
-    for (var i = 0; i < pasos.length; i++) {
-        document.getElementById(pasos[i]).classList.add("d-none");
+function formatearPrecio(valor) {
+    var str = valor.toString();       // 25000 → "25000"
+    var resultado = "";
+    var contador = 0;
+
+    // Recorrer el string de derecha a izquierda
+    for (var i = str.length - 1; i >= 0; i--) {
+        resultado = str[i] + resultado;
+        contador++;
+        // Cada 3 digitos, agregar un punto (separador de miles)
+        if (contador % 3 === 0 && i > 0) {
+            resultado = "." + resultado;
+        }
     }
 
-    if (numero === "exito") {
-        document.getElementById("pasoExito").classList.remove("d-none");
-    } else {
-        document.getElementById("paso" + numero).classList.remove("d-none");
+    return "$" + resultado;   // "$25.000"
+}
+```
+
+**¿Como funciona?**
+1. Convierte el numero a string: `25000` → `"25000"`
+2. Recorre cada digito **de derecha a izquierda**
+3. Cada 3 digitos, inserta un punto `.` como separador de miles
+4. Agrega el signo `$` al inicio
+
+| Entrada | Salida |
+|---------|--------|
+| `25000` | `$25.000` |
+| `80000` | `$80.000` |
+| `15000` | `$15.000` |
+
+### 📅 Seccion 4: Utilidades de fecha
+
+```javascript
+function obtenerFechaHoy() {
+    var hoy = new Date();
+    var dia = hoy.getDate();        // Dia del mes (1-31)
+    var mes = hoy.getMonth() + 1;   // Mes (0-11, por eso +1)
+    var anio = hoy.getFullYear();   // Año completo (2026)
+    if (dia < 10) dia = "0" + dia;  // Agregar cero a la izquierda si es menor a 10
+    if (mes < 10) mes = "0" + mes;
+    return dia + "/" + mes + "/" + anio;  // "05/05/2026"
+}
+```
+
+**¿Por que `getMonth() + 1`?** Porque en JavaScript los meses van de **0 a 11** (enero = 0, diciembre = 11). Se le suma 1 para que sea el numero de mes normal.
+
+### 🔒 Seccion 10: Control de disponibilidad (horarios)
+
+Esta es la mejora mas importante del segundo avance. Antes de mostrar los horarios, se **filtran** los que ya estan ocupados:
+
+```javascript
+function renderizarHorarios() {
+    var contenedor = document.getElementById("listaHorarios");
+    contenedor.innerHTML = "";
+
+    var fechaHoy = obtenerFechaHoy();
+    var idxProf = seleccion.profesional;    // Indice del profesional elegido
+
+    for (var i = 0; i < horarios.length; i++) {
+        // Verificar si este horario ya esta ocupado
+        var ocupado = false;
+        for (var j = 0; j < turnosOcupados.length; j++) {
+            var t = turnosOcupados[j];
+            if (t.profesional === idxProf &&
+                t.fecha === fechaHoy &&
+                t.hora === horarios[i]) {
+                ocupado = true;
+                break;    // Ya lo encontro, no necesita seguir buscando
+            }
+        }
+
+        if (ocupado) {
+            // Boton deshabilitado (gris, no se puede hacer clic)
+            // ...innerHTML con btn-outline-secondary y disabled...
+        } else {
+            // Boton activo (verde, se puede hacer clic)
+            // ...innerHTML con btn-outline-success y onclick...
+        }
     }
 }
 ```
 
-**Paso a paso:**
-1. Define un array con los IDs de todos los pasos.
-2. Recorre el array con un `for` y **oculta todos** agregando `d-none`.
-3. Luego **muestra solo el paso solicitado** quitando `d-none`.
-4. Usa **concatenacion** (`"paso" + numero`) para construir el ID dinamicamente. Si `numero` es `2`, se convierte en `"paso2"`.
+**Logica paso a paso:**
+1. Obtiene la fecha de hoy y el indice del profesional seleccionado.
+2. Por cada horario del array base, busca si existe un turno ocupado que coincida en los **3 criterios**: mismo profesional, misma fecha y misma hora.
+3. Si esta ocupado: renderiza un boton **gris y deshabilitado** (`disabled`).
+4. Si esta libre: renderiza un boton **verde y clicable**.
+5. Si **todos** los horarios estan ocupados, muestra un mensaje de advertencia.
 
-### 🏗️ Secciones 5, 6 y 7: Renderizar servicios, profesionales y horarios
-
-Las tres funciones siguen el **mismo patron**:
-
-```javascript
-function renderizarServicios() {
-    var contenedor = document.getElementById("listaServicios");
-    contenedor.innerHTML = "";                     // 1. Limpiar el contenedor
-
-    for (var i = 0; i < servicios.length; i++) {   // 2. Recorrer el array
-        var s = servicios[i];
-        var col = document.createElement("div");   // 3. Crear un elemento <div>
-        col.className = "col-md-4 col-sm-6";       // 4. Asignarle clases
-
-        col.innerHTML = '...HTML de la card...';    // 5. Poner el HTML interno
-
-        contenedor.appendChild(col);               // 6. Agregarlo al contenedor
-    }
-}
-```
-
-**Metodos del DOM utilizados:**
-
-| Metodo | Que hace |
-|--------|---------|
-| `document.getElementById("id")` | Obtiene un elemento por su ID |
-| `document.createElement("tag")` | Crea un nuevo elemento HTML en memoria |
-| `elemento.innerHTML = "..."` | Establece el contenido HTML interno de un elemento |
-| `elemento.className = "..."` | Establece las clases CSS del elemento |
-| `contenedor.appendChild(hijo)` | Agrega un elemento hijo al final del contenedor |
-
-**¿Que es `.innerHTML = ""`?** Limpiar el contenido previo antes de volver a llenar el contenedor. Si no se hace esto, cada vez que se llame a la funcion se duplicarian las cards.
-
-**¿Como se pasa el indice al hacer clic?** Se usa concatenacion para construir el atributo `onclick`:
+**¿Como se marca un turno como ocupado?** Al confirmar una reserva:
 
 ```javascript
-'onclick="seleccionarServicio(' + i + ')"'
-```
-
-Si `i` vale `2`, el resultado es `onclick="seleccionarServicio(2)"`. Asi JavaScript sabe que servicio se eligio.
-
-### ✅ Seccion 8: Resumen y confirmacion
-
-**`mostrarResumen()`** — Accede a los arrays con los indices guardados en `seleccion` y pone los datos en el HTML:
-
-```javascript
-var servicio = servicios[seleccion.servicio];  // Acceder al objeto por indice
-document.getElementById("resServicio").textContent = servicio.nombre;
-```
-
-`.textContent` es similar a `.innerHTML`, pero inserta **solo texto plano** (sin interpretar HTML). Es mas seguro cuando el contenido viene de datos del usuario.
-
-**Formato de fecha:** Se usa `toLocaleDateString("es-MX", opciones)` para mostrar la fecha en español:
-
-```javascript
-var hoy = new Date();   // Crea un objeto con la fecha/hora actual
-var fechaTexto = hoy.toLocaleDateString("es-MX", {
-    weekday: "long",    // "lunes", "martes", etc.
-    year:    "numeric", // "2026"
-    month:   "long",    // "abril"
-    day:     "numeric"  // "28"
+turnosOcupados.push({
+    profesional: seleccion.profesional,   // Indice del profesional
+    fecha:       fechaHoy,                // "05/05/2026"
+    hora:        hora                     // "09:00 AM"
 });
-// Resultado: "lunes, 28 de abril de 2026"
+guardarTurnosOcupados();   // Persiste en localStorage
 ```
 
-**`confirmarReserva()`** — Valida el nombre, crea un objeto de cita y lo agrega al array:
+### 🗑️ Seccion 13: Limpiar datos
 
 ```javascript
-var nombreCliente = document.getElementById("inputCliente").value.trim();
-
-if (nombreCliente === "") {
-    alert("Por favor escribe tu nombre para confirmar la cita.");
-    return;   // Detiene la ejecucion de la funcion
-}
-
-var nuevaCita = {
-    cliente:     nombreCliente,
-    servicio:    servicio.nombre,
-    profesional: profesional.nombre,
-    fecha:       fechaCorta,
-    hora:        hora,
-    precio:      servicio.precio
-};
-
-citas.push(nuevaCita);   // Agrega el objeto al final del array
-```
-
-| Metodo/Propiedad | Que hace |
-|-----------------|---------|
-| `.value` | Obtiene el texto escrito en un `<input>` |
-| `.trim()` | Quita espacios en blanco al inicio y al final del texto |
-| `alert()` | Muestra un cuadro de dialogo con un mensaje |
-| `return` | Sale de la funcion inmediatamente (no ejecuta el codigo que viene despues) |
-| `.push()` | Agrega un elemento al final de un array |
-
-### 📊 Seccion 9: Dashboard del dueño
-
-**`actualizarDashboard()`** — Recorre el array `citas` y genera filas de la tabla:
-
-```javascript
-for (var i = 0; i < citas.length; i++) {
-    var c = citas[i];
-    var fila = document.createElement("tr");   // Crea una fila <tr>
-    fila.innerHTML =
-        '<td>' + (i + 1) + '</td>' +           // Numero de fila
-        '<td>' + c.cliente + '</td>' +          // Nombre del cliente
-        '<td>' + c.servicio + '</td>' +         // Servicio
-        '<td>' + c.profesional + '</td>' +      // Profesional
-        '<td>' + c.fecha + '</td>' +            // Fecha
-        '<td>' + c.hora + '</td>' +             // Hora
-        '<td>$' + c.precio.toFixed(2) + '</td>';// Precio con 2 decimales
-    tbody.appendChild(fila);
+function limpiarDatos() {
+    if (confirm("¿Estas seguro de que quieres eliminar todas las citas?")) {
+        citas = [];
+        turnosOcupados = [];
+        guardarCitas();
+        guardarTurnosOcupados();
+        actualizarDashboard();
+    }
 }
 ```
 
-**`.toFixed(2)`** — Convierte un numero a string con exactamente 2 decimales. Ejemplo: `150` se convierte en `"150.00"`.
-
-**`calcularIngresosSemana()`** — Suma los precios de las citas que caen en la semana actual:
-
-```javascript
-// Obtener el lunes de esta semana
-var diaSemana = hoy.getDay();  // 0=domingo, 1=lunes, ..., 6=sabado
-var diffLunes = (diaSemana === 0) ? 6 : diaSemana - 1;
-var lunes = new Date(hoy);
-lunes.setDate(hoy.getDate() - diffLunes);
-lunes.setHours(0, 0, 0, 0);   // Inicio del dia (00:00:00)
-
-// Obtener el domingo de esta semana
-var domingo = new Date(lunes);
-domingo.setDate(lunes.getDate() + 6);
-domingo.setHours(23, 59, 59, 999);   // Fin del dia (23:59:59)
-```
-
-Luego compara la fecha de cada cita contra el rango lunes-domingo y suma el precio si esta dentro.
-
-**Operador ternario** `(condicion) ? valorSi : valorNo`:
-
-```javascript
-var diffLunes = (diaSemana === 0) ? 6 : diaSemana - 1;
-```
-
-Es equivalente a:
-
-```javascript
-var diffLunes;
-if (diaSemana === 0) {
-    diffLunes = 6;         // Si es domingo, retroceder 6 dias
-} else {
-    diffLunes = diaSemana - 1;   // Si es otro dia, retroceder menos
-}
-```
-
-### 🚀 Seccion 10: Inicializacion
-
-```javascript
-function inicializarUI() {
-    renderizarServicios();    // Genera las cards de servicios
-    mostrarVistaCliente();    // Muestra la vista del cliente
-}
-
-inicializarUI();   // Se ejecuta automaticamente al cargar la pagina
-```
-
-Cuando el navegador llega a esta linea, llama a `inicializarUI()` inmediatamente. No necesita esperar a ningun evento porque el `<script>` esta al **final del `<body>`**, asi que para ese momento todo el HTML ya existe en la pagina.
+`confirm()` muestra un cuadro de dialogo con botones "Aceptar" y "Cancelar". Devuelve `true` si el usuario acepta, `false` si cancela.
 
 ---
 
 ## 🔄 Flujo completo de la aplicacion
 
 ```
-   ┌─────────────────┐
-   │ Pagina carga    │
-   │ inicializarUI() │
-   └────────┬────────┘
-            │
-   ┌────────▼────────┐
-   │ PASO 1          │
-   │ Ver servicios   │──── Clic en una card
-   └────────┬────────┘
-            │
-   ┌────────▼────────┐
-   │ PASO 2          │
-   │ Ver profesional │──── Clic en una card
-   └────────┬────────┘
-            │
-   ┌────────▼────────┐
-   │ PASO 3          │
-   │ Ver horarios    │──── Clic en un boton
-   └────────┬────────┘
-            │
-   ┌────────▼────────┐
-   │ PASO 4          │
-   │ Resumen + nombre│──── Clic en "Confirmar"
-   └────────┬────────┘
-            │
-            │ citas.push(nuevaCita)
-            │
-   ┌────────▼────────┐     ┌──────────────────────┐
-   │ EXITO           │     │ PANEL DEL DUEÑO      │
-   │ Mensaje verde   │     │ Tabla con las citas   │
-   └─────────────────┘     │ + ingresos semanales  │
-                           └──────────────────────┘
+   ┌──────────────────────────────┐
+   │ Pagina carga                 │
+   │ cargarCitas() de localStorage│
+   │ cargarTurnosOcupados()       │
+   │ inicializarUI()              │
+   └──────────┬───────────────────┘
+              │
+   ┌──────────▼──────────┐
+   │ PASO 1              │
+   │ Ver servicios       │──── Clic en una card
+   │ (precios en COP)    │
+   └──────────┬──────────┘
+              │
+   ┌──────────▼──────────┐
+   │ PASO 2              │
+   │ Ver profesionales   │──── Clic en una card
+   │ (con foto circular) │
+   └──────────┬──────────┘
+              │
+   ┌──────────▼──────────────┐
+   │ PASO 3                  │
+   │ Ver horarios            │──── Clic en un boton
+   │ (ocupados deshabilitados)│
+   └──────────┬──────────────┘
+              │
+   ┌──────────▼──────────┐
+   │ PASO 4              │
+   │ Resumen + nombre    │──── Clic en "Confirmar"
+   └──────────┬──────────┘
+              │
+              │ citas.push() + guardarCitas()
+              │ turnosOcupados.push() + guardarTurnosOcupados()
+              │
+   ┌──────────▼──────────┐     ┌───────────────────────┐
+   │ EXITO               │     │ PANEL DEL DUEÑO       │
+   │ Mensaje de exito    │     │ Tabla + ingresos COP  │
+   │ con icono check     │     │ Boton limpiar datos   │
+   └─────────────────────┘     └───────────────────────┘
 ```
 
-Cada paso tiene un boton **"Volver"** que llama a `irAPaso()` con el numero del paso anterior, permitiendo al usuario regresar y cambiar su seleccion.
+---
+
+## 💾 Como funciona localStorage (resumen visual)
+
+```
+   GUARDAR                           LEER
+   ───────                           ────
+   Array JS                          localStorage
+   [{...}, {...}]                     "bookyCitas" : "[{...},{...}]"
+        │                                  │
+        ▼ JSON.stringify()                 ▼ JSON.parse()
+   Texto JSON                         Array JS
+   "[{...},{...}]"                    [{...}, {...}]
+        │                                  │
+        ▼ localStorage.setItem()           ▼ se usa en el codigo
+   Se guarda en el navegador          Se trabaja normalmente
+```
 
 ---
 
 ## 📐 Sistema de grilla de Bootstrap (responsive)
-
-Bootstrap divide cada fila (`row`) en **12 columnas**. Las clases `col-XX-N` indican cuantas columnas ocupa un elemento segun el tamaño de pantalla:
 
 | Prefijo | Tamaño de pantalla | Ancho minimo |
 |---------|-------------------|-------------|
@@ -552,15 +498,8 @@ Bootstrap divide cada fila (`row`) en **12 columnas**. Las clases `col-XX-N` ind
 | `col-md-` | Mediano (tablets) | >= 768px |
 | `col-lg-` | Grande (laptops) | >= 992px |
 
-**Ejemplo en el proyecto:**
-
-```html
-<div class="col-md-4 col-sm-6">
-```
-
-- En pantallas **medianas o mas grandes**: ocupa 4/12 = **33%** del ancho (caben 3 cards por fila).
-- En pantallas **pequeñas**: ocupa 6/12 = **50%** del ancho (caben 2 cards por fila).
-- En pantallas **extra pequeñas**: ocupa 12/12 = **100%** del ancho (1 card por fila, es el comportamiento por defecto).
+**Servicios:** `col-md-4 col-sm-6` → 3 cards en desktop, 2 en tablet, 1 en celular.
+**Profesionales:** `col-md-3 col-sm-6` → 4 cards en desktop, 2 en tablet, 1 en celular.
 
 ---
 
@@ -570,31 +509,43 @@ Bootstrap divide cada fila (`row`) en **12 columnas**. Las clases `col-XX-N` ind
 |----------|----------------------|-------------|
 | Variables | `var servicios = [...]` | Espacios en memoria para guardar datos |
 | Arrays | `["09:00 AM", "10:00 AM"]` | Listas ordenadas de elementos |
-| Objetos | `{ nombre: "Ana", especialidad: "Estilista" }` | Colecciones de pares clave-valor |
+| Objetos | `{ nombre: "Ana", imagen: "img/Ana.jpg" }` | Colecciones de pares clave-valor |
 | Funciones | `function irAPaso(numero) {...}` | Bloques de codigo reutilizables |
 | Ciclo for | `for (var i = 0; i < arr.length; i++)` | Repite codigo N veces |
-| Condicional if/else | `if (nombre === "") { ... }` | Ejecuta codigo solo si se cumple una condicion |
-| Manipulacion del DOM | `document.getElementById()` | Acceder y modificar elementos de la pagina |
+| For anidado | Dos `for` dentro de otro | Para buscar turnos ocupados dentro de horarios |
+| Condicional if/else | `if (ocupado) { ... } else { ... }` | Ejecuta codigo segun una condicion |
+| Manipulacion del DOM | `document.getElementById()` | Acceder y modificar elementos HTML |
 | Eventos onclick | `onclick="funcion()"` | Ejecutar codigo al hacer clic |
 | Metodo push | `citas.push(objeto)` | Agrega un elemento al final de un array |
-| Metodo split | `fecha.split("/")` | Divide un string en un array usando un separador |
-| Objeto Date | `new Date()` | Representa fechas y horas |
-| Template strings | Concatenacion con `+` | Construir cadenas de texto dinamicamente |
-| Operador ternario | `(cond) ? val1 : val2` | If/else abreviado en una linea |
-| Comparacion estricta | `===` | Compara valor **y** tipo de dato |
+| Metodo split | `fecha.split("/")` | Divide un string en un array |
+| Objeto Date | `new Date()` | Fechas y horas |
+| localStorage | `localStorage.setItem()` | Almacenamiento persistente en el navegador |
+| JSON.stringify | `JSON.stringify(citas)` | Convierte objetos/arrays a texto |
+| JSON.parse | `JSON.parse(datos)` | Convierte texto JSON a objetos/arrays |
+| Operador ternario | `(cond) ? val1 : val2` | If/else en una linea |
+| Comparacion estricta | `===` | Compara valor y tipo de dato |
+| break | `break;` | Sale inmediatamente de un ciclo for |
+| confirm() | `confirm("¿Seguro?")` | Cuadro de confirmacion (Aceptar/Cancelar) |
+| alert() | `alert("Mensaje")` | Cuadro de dialogo simple |
+| onerror (img) | `onerror="..."` | Maneja errores de carga de imagenes |
+| toString() | `valor.toString()` | Convierte un numero a texto |
+| toFixed(2) | `precio.toFixed(2)` | Numero con 2 decimales |
 
 ---
 
 ## ❓ Preguntas frecuentes
 
-**¿Por que los datos se pierden al recargar la pagina?**
-Porque los arrays estan en memoria RAM. Al recargar, JavaScript se ejecuta de nuevo y los arrays vuelven a su estado inicial (vacio para `citas`). En el segundo avance se usara `localStorage` para persistir los datos.
+**¿Que pasa si se borra el cache del navegador?**
+Los datos de `localStorage` se eliminan. Las citas y turnos ocupados se perderan y la aplicacion comenzara como nueva.
+
+**¿Los turnos ocupados funcionan solo para el dia de hoy?**
+Si. El filtro compara la fecha del turno con la fecha de hoy. Si mañana se abre la app, todos los horarios apareceran disponibles para el nuevo dia (aunque las citas viejas siguen en el historial del dashboard).
+
+**¿Por que se guardan los turnos ocupados SEPARADOS de las citas?**
+Para hacer la busqueda de disponibilidad mas rapida y sencilla. El array `turnosOcupados` solo tiene 3 datos (profesional, fecha, hora), mientras que `citas` tiene mas informacion (cliente, servicio, precio).
+
+**¿Que pasa si la imagen de un profesional no se encuentra?**
+El atributo `onerror` del `<img>` genera un **placeholder SVG** con la inicial del nombre del profesional sobre un fondo gris. Asi la card nunca se ve rota.
 
 **¿Por que se usa `var` en vez de `let` o `const`?**
-Porque este es un proyecto de nivel introductorio. `var` es la forma clasica de declarar variables en JavaScript. `let` y `const` son mas modernos (ES6+) y ofrecen mejores practicas, pero no se requieren para este avance basico.
-
-**¿Por que el `<script>` esta al final del `<body>`?**
-Para que todo el HTML ya exista en la pagina cuando JavaScript se ejecuta. Si estuviera en el `<head>`, `document.getElementById()` no encontraria los elementos porque aun no se habrian creado.
-
-**¿Que significa "mock data"?**
-Son datos falsos/de ejemplo creados manualmente para simular una funcionalidad real. Aqui los servicios, profesionales y horarios son inventados para demostrar como funcionaria la app con datos reales.
+Porque este es un proyecto de nivel introductorio. `var` es la forma clasica de declarar variables en JavaScript.
