@@ -1,0 +1,41 @@
+# .gitignore — Archivos a ignorar en git
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Node (si se usa en futuro)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Archivos de compilacion
+dist/
+build/
+*.min.js
+*.min.css
+
+# Archivos temporales
+temp/
+tmp/
+*.tmp
+
+# Variables de entorno (si se usa en futuro)
+.env
+.env.local
+.env.*.local
+
+# Cache del navegador
+.cache/
+
+# Logs
+*.log
+
+# Backups
+*.backup
+*.bak
